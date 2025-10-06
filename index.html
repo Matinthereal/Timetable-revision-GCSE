@@ -4,34 +4,23 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>GCSE Revision — Matin</title>
-  <meta name="description" content="Intuitive, aesthetic GCSE revision planner with timers, progress tracking, notes, and tips." />
+  <meta name="description" content="Aesthetic GCSE revision planner with timetable views." />
 
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #ffffff;
-      --glass: rgba(255,255,255,0.7);
-      --text: #1f1f1f;
-      --muted: #6b6b6b;
-      --border: rgba(0,0,0,0.1);
-
-      /* Palette from your swatches */
       --peach: #FFCDb2;
       --light-pink: #FFB4A2;
       --medium-pink: #E5989B;
       --mauve: #B5838C;
       --deep-mauve: #6D6875;
 
-      /* Neutrals */
       --white: #ffffff;
       --black: #000000;
       --gray: #cccccc;
 
-      /* Assign subjects */
       --maths: var(--peach);
       --physics: var(--light-pink);
       --chemistry: var(--medium-pink);
@@ -41,8 +30,9 @@
 
       --accent: var(--medium-pink);
       --accent-2: var(--mauve);
-
-      --shadow: 0 12px 28px rgba(0,0,0,0.08);
+      --text: #1f1f1f;
+      --muted: #6b6b6b;
+      --border: rgba(0,0,0,0.1);
     }
 
     body {
@@ -50,9 +40,8 @@
       background: linear-gradient(135deg, var(--peach), var(--light-pink), var(--medium-pink), var(--mauve), var(--deep-mauve));
       background-size: 400% 400%;
       animation: gradient 20s ease infinite;
+      font-family: Inter, sans-serif;
       color: var(--text);
-      font-family: Inter, system-ui, sans-serif;
-      line-height:1.6;
     }
     @keyframes gradient {
       0% {background-position:0% 50%;}
@@ -60,76 +49,41 @@
       100% {background-position:0% 50%;}
     }
 
-    .container { max-width: 1100px; margin: 0 auto; padding: 34px 20px 90px; }
-
-    header { display:flex; flex-direction:column; gap:12px; margin-bottom:20px; }
-    .title {
-      font-family: "Playfair Display", serif;
-      font-weight:700;
-      font-size: clamp(34px, 5vw, 48px);
-      margin:0;
-      color: var(--black);
-    }
-    .subtitle { color: var(--muted); font-weight:600; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+    header { margin-bottom:20px; }
+    .title { font-family:"Playfair Display",serif; font-size:40px; margin:0; }
+    .subtitle { color:var(--muted); margin:6px 0 12px; }
     .actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .btn { padding:8px 14px; border-radius:8px; border:1px solid var(--border); cursor:pointer; font-weight:600; }
+    .btn-primary { background:var(--accent); color:var(--white); border:none; }
 
-    .btn {
-      border:1px solid var(--border);
-      background: var(--glass);
-      backdrop-filter: blur(12px);
-      color: var(--text);
-      padding:10px 14px;
-      border-radius:12px;
-      font-weight:700;
-      cursor:pointer;
-      box-shadow: var(--shadow);
-    }
-    .btn-primary { background: var(--accent); color: var(--white); border:none; }
-    .btn:hover { opacity:0.9; }
+    .card { background:var(--white); border-radius:12px; padding:16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+    h2 { font-family:"Playfair Display",serif; margin:0 0 12px; }
 
-    .card {
-      background: var(--glass);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: var(--shadow);
-      margin-bottom:16px;
-    }
-    h2 { font-family: "Playfair Display", serif; font-weight:700; margin:0 0 12px; }
+    .tabs { display:flex; gap:8px; margin-bottom:12px; }
+    .tab { padding:6px 12px; border-radius:20px; border:1px solid var(--border); cursor:pointer; }
+    .tab.active { background:var(--accent); color:var(--white); }
 
-    .tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
-    .tab {
-      padding:8px 12px; border-radius:999px; border:1px solid var(--border);
-      background: var(--white); cursor:pointer; font-weight:700; color:var(--text);
-    }
-    .tab.active { background: var(--accent); color: var(--white); }
-
-    .row {
-      display:grid; grid-template-columns: 130px 1fr; gap:12px; align-items:center;
-      padding:10px; border-radius:14px; margin-bottom:8px; border:1px solid var(--border);
-      background: var(--white);
-    }
-    .time { font-weight:800; color:var(--muted); text-align:center; }
-    .slot { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-    .chip { width:16px; height:16px; border-radius:5px; }
+    .row { display:grid; grid-template-columns:120px 1fr; gap:10px; padding:8px; border:1px solid var(--border); border-radius:8px; margin-bottom:6px; }
+    .time { font-weight:700; color:var(--muted); text-align:center; }
+    .slot { display:flex; gap:8px; align-items:center; }
+    .chip { width:14px; height:14px; border-radius:4px; }
     .chip.maths{background:var(--maths);} .chip.physics{background:var(--physics);}
     .chip.chemistry{background:var(--chemistry);} .chip.english{background:var(--english);}
     .chip.geography{background:var(--geography);} .chip.break{background:var(--break);}
-    .subject { font-weight:800; }
-    .tag { font-size:12px; font-weight:700; padding:4px 8px; border-radius:999px; background: var(--glass); }
+    .subject { font-weight:700; }
 
     .week-table { width:100%; border-collapse:collapse; }
-    .week-table th, .week-table td { border:1px solid var(--border); padding:8px; text-align:center; }
-    .week-table th { background: var(--accent); color: var(--white); }
-
-    footer { margin-top:22px; color:var(--muted); font-size:13px; text-align:center; }
+    .week-table th, .week-table td { border:1px solid var(--border); padding:6px; text-align:center; }
+    .week-table th { background:var(--accent); color:var(--white); }
+    footer { text-align:center; color:var(--muted); margin-top:20px; font-size:13px; }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
       <h1 class="title">GCSE Revision — Matin</h1>
-      <div class="subtitle">45-minute blocks, 5–7 minute breaks. Days: Monday, Tuesday, Thursday, Friday, Sunday. 5:00–9:00 PM.</div>
+      <div class="subtitle">45-minute blocks, 5–7 minute breaks. Days: Mon, Tue, Thu, Fri, Sun. 5–9 PM.</div>
       <div class="actions">
         <button class="btn-primary" onclick="window.print()">Print / Save PDF</button>
         <button class="btn" id="toggle-view">Switch to Full Timetable</button>
@@ -173,11 +127,22 @@
   <script>
     const DAYS = ["Monday","Tuesday","Thursday","Friday","Sunday"];
     const SCHEDULE = {
-      "Monday": [
-        { time:"5:00 – 5:45", subject:"English Literature", color:"english", tag:"Essays + quotes" },
-        { time:"5:45 – 5:52", subject:"Break", color:"break", tag:"7 mins" },
-        { time:"5:52 – 6:37", subject:"Physics", color:"physics", tag:"Forces & energy" },
-        { time:"6:37 – 6:42", subject:"Break", color:"break", tag:"5 mins" },
-        { time:"6:42 – 7:27", subject:"Chemistry", color:"chemistry", tag:"Atomic structure" },
-        { time:"7:27 – 7:34", subject:"Break", color:"break", tag:"7 mins" },
-        { time:"7:34 – 8:19", subject:"Maths", color:"maths", tag:"Algebra practice"
+      "Monday":[
+        {time:"5:00 – 5:45",subject:"English Literature",color:"english",tag:"Essays + quotes"},
+        {time:"5:45 – 5:52",subject:"Break",color:"break",tag:"7 mins"},
+        {time:"5:52 – 6:37",subject:"Physics",color:"physics",tag:"Forces & energy"},
+        {time:"6:37 – 6:42",subject:"Break",color:"break",tag:"5 mins"},
+        {time:"6:42 – 7:27",subject:"Chemistry",color:"chemistry",tag:"Atomic structure"},
+        {time:"7:27 – 7:34",subject:"Break",color:"break",tag:"7 mins"},
+        {time:"7:34 – 8:19",subject:"Maths",color:"maths",tag:"Algebra practice"},
+        {time:"8:19 – 8:26",subject:"Break",color:"break",tag:"7 mins"},
+        {time:"8:26 – 9:00",subject:"Geography",color:"geography",tag:"Case study recall"}
+      ],
+      "Tuesday":[
+        {time:"5:00 – 5:45",subject:"Physics",color:"physics",tag:"Electricity & waves"},
+        {time:"5:45 – 5:52",subject:"Break",color:"break",tag:"7 mins"},
+        {time:"5:52 – 6:37",subject:"Chemistry",color:"chemistry",tag:"Organic chemistry"},
+        {time:"6:37 – 6:42",subject:"Break",color:"break",tag:"5 mins"},
+        {time:"6:42 – 7:27",subject:"Maths",color:"maths",tag:"Geometry & trig"},
+        {time:"7:27 – 7:34",subject:"Break",color:"break",tag:"7 mins"},
+        {time:"7:34 – 8:19",subject:"English Language

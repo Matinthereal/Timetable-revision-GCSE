@@ -12,92 +12,115 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --bg: #f7f6fb;
-      --glass: rgba(255,255,255,0.65);
-      --text: #1f2433;
-      --muted: #6b7280;
-      --border: rgba(50,60,90,0.12);
+    :root {
+      --bg: #ffffff;
+      --glass: rgba(255,255,255,0.7);
+      --text: #1f1f1f;
+      --muted: #6b6b6b;
+      --border: rgba(0,0,0,0.1);
 
-      --accent: #6f5ae6;
-      --accent-2: #ff9ab3;
+      /* Palette from your swatches */
+      --peach: #FFCDb2;
+      --light-pink: #FFB4A2;
+      --medium-pink: #E5989B;
+      --mauve: #B5838C;
+      --deep-mauve: #6D6875;
 
-      /* Harmonised pastel palette */
-      --maths: #A8D5BA;       /* sage green */
-      --physics: #B8C6F8;     /* periwinkle */
-      --chemistry: #A7D8F0;   /* sky blue */
-      --english: #F7B2BD;     /* blush rose */
-      --geography: #9FD9D9;   /* seafoam teal */
-      --break: #E2D4F0;       /* lavender mist */
+      /* Neutrals */
+      --white: #ffffff;
+      --black: #000000;
+      --gray: #cccccc;
 
-      --shadow: 0 18px 40px rgba(60, 70, 120, 0.15);
+      /* Assign subjects */
+      --maths: var(--peach);
+      --physics: var(--light-pink);
+      --chemistry: var(--medium-pink);
+      --english: var(--mauve);
+      --geography: var(--deep-mauve);
+      --break: var(--gray);
+
+      --accent: var(--medium-pink);
+      --accent-2: var(--mauve);
+
+      --shadow: 0 12px 28px rgba(0,0,0,0.08);
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root{
-        --bg: #0f1220;
-        --glass: rgba(23,27,46,0.6);
-        --text: #e7e9f3;
-        --muted: #a9adc2;
-        --border: rgba(160,170,210,0.14);
-        --shadow: 0 18px 40px rgba(0,0,0,0.45);
-      }
+    body {
+      margin:0; padding:0;
+      background: linear-gradient(135deg, var(--peach), var(--light-pink), var(--medium-pink), var(--mauve), var(--deep-mauve));
+      background-size: 400% 400%;
+      animation: gradient 20s ease infinite;
+      color: var(--text);
+      font-family: Inter, system-ui, sans-serif;
+      line-height:1.6;
+    }
+    @keyframes gradient {
+      0% {background-position:0% 50%;}
+      50% {background-position:100% 50%;}
+      100% {background-position:0% 50%;}
     }
 
-    html, body { margin:0; padding:0; background:
-      radial-gradient(1100px 700px at 15% -10%, #fff 0%, var(--bg) 55%), var(--bg);
-      color: var(--text); font-family: Inter, system-ui, Segoe UI, Roboto, Arial; line-height:1.6;
-    }
     .container { max-width: 1100px; margin: 0 auto; padding: 34px 20px 90px; }
 
-    header { display:grid; grid-template-columns: 1fr auto; align-items:end; gap:16px; margin-bottom:18px; }
+    header { display:flex; flex-direction:column; gap:12px; margin-bottom:20px; }
     .title {
-      font-family: "Playfair Display", serif; font-weight:700;
-      font-size: clamp(34px, 5vw, 48px); margin:0;
-      background: linear-gradient(60deg, var(--accent), var(--accent-2));
-      -webkit-background-clip: text; background-clip:text; color:transparent;
+      font-family: "Playfair Display", serif;
+      font-weight:700;
+      font-size: clamp(34px, 5vw, 48px);
+      margin:0;
+      color: var(--black);
     }
-    .subtitle { margin-top:6px; color:var(--muted); font-weight:600; }
-    .actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .subtitle { color: var(--muted); font-weight:600; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; }
+
     .btn {
-      appearance:none; border:1px solid var(--border); background:var(--glass);
-      backdrop-filter: blur(16px); color:var(--text); padding:10px 14px; border-radius:12px;
-      font-weight:700; cursor:pointer; box-shadow: var(--shadow); transition: transform .08s ease, box-shadow .2s ease;
+      border:1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      color: var(--text);
+      padding:10px 14px;
+      border-radius:12px;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow: var(--shadow);
     }
-    .btn:hover { transform: translateY(-1px); }
-    .btn-primary { background: var(--accent); color:white; border-color:transparent; }
-    .btn-outline { background: transparent; color: var(--accent); border-color: var(--accent); }
+    .btn-primary { background: var(--accent); color: var(--white); border:none; }
+    .btn:hover { opacity:0.9; }
 
     .card {
-      background: var(--glass); border: 1px solid var(--border); border-radius: 18px;
-      padding: 18px; box-shadow: var(--shadow);
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-bottom:16px;
     }
-    h2 { font-family: "Playfair Display", serif; font-weight:700; font-size: clamp(22px, 3vw, 28px); margin: 6px 0 12px; }
+    h2 { font-family: "Playfair Display", serif; font-weight:700; margin:0 0 12px; }
 
     .tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
     .tab {
       padding:8px 12px; border-radius:999px; border:1px solid var(--border);
-      background: rgba(255,255,255,0.6); backdrop-filter: blur(12px); cursor:pointer; font-weight:700; color:var(--text);
+      background: var(--white); cursor:pointer; font-weight:700; color:var(--text);
     }
-    .tab.active { background: var(--accent); color:white; border-color:transparent; }
+    .tab.active { background: var(--accent); color: var(--white); }
 
     .row {
       display:grid; grid-template-columns: 130px 1fr; gap:12px; align-items:center;
       padding:10px; border-radius:14px; margin-bottom:8px; border:1px solid var(--border);
-      background: rgba(255,255,255,0.55); backdrop-filter: blur(10px);
+      background: var(--white);
     }
     .time { font-weight:800; color:var(--muted); text-align:center; }
     .slot { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-    .chip { width:16px; height:16px; border-radius:5px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06); }
+    .chip { width:16px; height:16px; border-radius:5px; }
     .chip.maths{background:var(--maths);} .chip.physics{background:var(--physics);}
     .chip.chemistry{background:var(--chemistry);} .chip.english{background:var(--english);}
     .chip.geography{background:var(--geography);} .chip.break{background:var(--break);}
     .subject { font-weight:800; }
-    .tag { font-size:12px; font-weight:800; padding:6px 10px; border-radius:999px; border:1px solid rgba(0,0,0,0.06); background:#fff; }
+    .tag { font-size:12px; font-weight:700; padding:4px 8px; border-radius:999px; background: var(--glass); }
 
-    .week-table { width:100%; border-collapse:collapse; border:1px solid var(--border); }
+    .week-table { width:100%; border-collapse:collapse; }
     .week-table th, .week-table td { border:1px solid var(--border); padding:8px; text-align:center; }
-    .week-table th { background:linear-gradient(180deg, rgba(111,90,230,0.1), rgba(111,90,230,0.05)); }
+    .week-table th { background: var(--accent); color: var(--white); }
 
     footer { margin-top:22px; color:var(--muted); font-size:13px; text-align:center; }
   </style>
@@ -105,10 +128,8 @@
 <body>
   <div class="container">
     <header>
-      <div>
-        <h1 class="title">GCSE Revision — Matin</h1>
-        <div class="subtitle">45-minute blocks, 5–7 minute breaks. Focus days: Monday, Tuesday, Thursday, Friday, Sunday. 5:00–9:00 PM.</div>
-      </div>
+      <h1 class="title">GCSE Revision — Matin</h1>
+      <div class="subtitle">45-minute blocks, 5–7 minute breaks. Days: Monday, Tuesday, Thursday, Friday, Sunday. 5:00–9:00 PM.</div>
       <div class="actions">
         <button class="btn-primary" onclick="window.print()">Print / Save PDF</button>
         <button class="btn" id="toggle-view">Switch to Full Timetable</button>
@@ -125,7 +146,7 @@
     </div>
 
     <!-- Full Timetable -->
-    <div class="card" id="full-timetable" style="display:none; margin-top:14px">
+    <div class="card" id="full-timetable" style="display:none;">
       <h2>Full Week Timetable</h2>
       <div style="overflow-x:auto">
         <table class="week-table">
@@ -150,4 +171,13 @@
   </div>
 
   <script>
-    const DAYS
+    const DAYS = ["Monday","Tuesday","Thursday","Friday","Sunday"];
+    const SCHEDULE = {
+      "Monday": [
+        { time:"5:00 – 5:45", subject:"English Literature", color:"english", tag:"Essays + quotes" },
+        { time:"5:45 – 5:52", subject:"Break", color:"break", tag:"7 mins" },
+        { time:"5:52 – 6:37", subject:"Physics", color:"physics", tag:"Forces & energy" },
+        { time:"6:37 – 6:42", subject:"Break", color:"break", tag:"5 mins" },
+        { time:"6:42 – 7:27", subject:"Chemistry", color:"chemistry", tag:"Atomic structure" },
+        { time:"7:27 – 7:34", subject:"Break", color:"break", tag:"7 mins" },
+        { time:"7:34 – 8:19", subject:"Maths", color:"maths", tag:"Algebra practice"

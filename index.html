@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GCSE Revision — Matin</title>
+  <meta name="description" content="Intuitive, aesthetic GCSE revision planner with timers, progress tracking, notes, and tips." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #f7f5fb;
+      --glass: rgba(255,255,255,0.65);
+      --text: #1f2433;
+      --muted: #6b7280;
+      --border: rgba(50,60,90,0.12);
+
+      --accent: #6f5ae6;      /* primary */
+      --accent-2: #ff9ab3;    /* secondary */
+
+      /* Pastel subject palette */
+      --maths: #bde7ac;       /* mint green */
+      --physics: #d2c1f6;     /* lavender */
+      --chemistry: #b7e3ff;   /* sky blue */
+      --english: #ffc7d6;     /* blush pink */
+      --geography: #a8eaea;   /* soft teal */
+      --break: #efe8fb;       /* lilac */
+
+      --shadow: 0 18px 40px rgba(60, 70, 120, 0.15);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root{
+        --bg: #0f1220;
+        --glass: rgba(23,27,46,0.6);
+        --text: #e7e9f3;
+        --muted: #a9adc2;
+        --border: rgba(160,170,210,0.14);
+        --shadow: 0 18px 40px rgba(0,0,0,0.45);
+      }
+    }
+
+    html, body { margin:0; padding:0; background:
+      radial-gradient(1100px 700px at 15% -10%, #fff 0%, var(--bg) 55%), var(--bg);
+      color: var(--text); font-family: Inter, system-ui, Segoe UI, Roboto, Arial; line-height:1.6;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 34px 20px 90px; }
+
+    /* Header */
+    header { display:grid; grid-template-columns: 1fr auto; align-items:end; gap:16px; margin-bottom:18px; }
+    .title {
+      font-family: "Playfair Display", serif; font-weight:700;
+      font-size: clamp(34px, 5vw, 48px); margin:0;
+      background: linear-gradient(60deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; background-clip:text; color:transparent;
+    }
+    .subtitle { margin-top:6px; color:var(--muted); font-weight:600; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .btn {
+      appearance:none; border:1px solid var(--border); background:var(--glass);
+      backdrop-filter: blur(16px); color:var(--text); padding:10px 14px; border-radius:12px;
+      font-weight:700; cursor:pointer; box-shadow: var(--shadow); transition: transform .08s ease, box-shadow .2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--accent); color:white; border-color:transparent; }
+    .btn-outline { background: transparent; color: var(--accent); border-color: var(--accent); }
+
+    /* Glass cards */
+    .card {
+      background: var(--glass); border: 1px solid var(--border); border-radius: 18px;
+      padding: 18px; box-shadow: var(--shadow);
+    }
+    h2 { font-family: "Playfair Display", serif; font-weight:700; font-size: clamp(22px, 3vw, 28px); margin: 6px 0 12px; }
+
+    /* Tabs / day selector */
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+    .tab {
+      padding:8px 12px; border-radius:999px; border:1px solid var(--border);
+      background: rgba(255,255,255,0.6); backdrop-filter: blur(12px); cursor:pointer; font-weight:700; color:var(--text);
+    }
+    .tab.active { background: var(--accent); color:white; border-color:transparent; }
+
+    /* Timetable rows */
+    .row {
+      display:grid; grid-template-columns: 130px 1fr; gap:12px; align-items:center;
+      padding:10px; border-radius:14px; margin-bottom:8px; border:1px solid var(--border);
+      background: rgba(255,255,255,0.55); backdrop-filter: blur(10px);
+    }
+    .time { font-weight:800; color:var(--muted); text-align:center; }
+    .slot { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .chip { width:16px; height:16px; border-radius:5px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06); }
+    .chip.maths{background:var(--maths);} .chip.physics{background:var(--physics);}
+    .chip.chemistry{background:var(--chemistry);} .chip.english{background:var(--english);}
+    .chip.geography{background:var(--geography);} .chip.break{background:var(--break);}
+    .subject { font-weight:800; }
+    .tag { font-size:12px; font-weight:800; padding:6px 10px; border-radius:999px; border:1px solid rgba(0,0,0,0.06); background:#fff; }
+
+    /* Timer & progress */
+    .timer {
+      display:grid; grid-template-columns: 1fr auto; gap:10px; align-items:center;
+      padding:12px; border-radius:14px; border:1px solid var(--border);
+      background: rgba(255,255,255,0.6); backdrop-filter: blur(12px); margin-bottom:10px;
+    }
+    .clock { font-size:26px; font-weight:800; letter-spacing:1px; }
+    .controls { display:flex; gap:10px; flex-wrap:wrap; }
+    .progress-wrap { margin-top:8px; }
+    .progress-bar {
+      height:12px; border-radius:999px; background: rgba(0,0,0,0.08); overflow:hidden;
+      border:1px solid var(--border);
+    }
+    .progress-fill {
+      height:100%; width:0%; background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width .25s ease;
+    }
+    .note {
+      width:100%; min-height:64px; border-radius:12px; border:1px solid var(--border);
+      padding:10px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px);
+    }
+
+    /* Tips sidebar */
+    .layout {
+      display:grid; grid-template-columns: 1.1fr 0.9fr; gap:16px;
+    }
+    .tips { display:grid; gap:12px; }
+    .tip {
+      border:1px solid var(--border); border-radius:14px; padding:12px; background: rgba(255,255,255,0.6); backdrop-filter: blur(10px);
+    }
+    .tip h3 { margin:2px 0 6px; font-size:18px; font-weight:800; }
+
+    /* Footer */
+    footer { margin-top:22px; color:var(--muted); font-size:13px; text-align:center; }
+
+    /* Responsive */
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+    @media (max-width: 700px) { .row { grid-template-columns: 100px 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1 class="title">GCSE Revision — Matin</h1>
+        <div class="subtitle">45-minute blocks, 5–7 minute breaks. Focus days: Monday, Tuesday, Thursday, Friday, Sunday. 5:00–9:00 PM.</div>
+      </div>
+      <div class="actions">
+        <button class="btn-primary" onclick="window.print()">Print / Save PDF</button>
+        <button class="btn" id="toggle-theme">Toggle dark mode</button>
+      </div>
+    </header>
+
+    <section class="layout">
+      <!-- Left: Planner -->
+      <div>
+        <div class="card">
+          <h2>Today’s plan</h2>
+          <div class="tabs" id="day-tabs"></div>
+
+          <!-- Countdown + controls -->
+          <div class="timer">
+            <div>
+              <div id="current-block" class="muted" style="font-weight:800;">Current block: —</div>
+              <div id="countdown" class="clock">45:00</div>
+              <div id="phase" class="muted">Ready to start a 45-minute study block.</div>
+            </div>
+            <div class="controls">
+              <button class="btn btn-primary" id="start">Start</button>
+              <button class="btn" id="pause">Pause</button>
+              <button class="btn btn-outline" id="reset">Reset</button>
+              <button class="btn" id="toggle-phase">Switch to Break</button>
+            </div>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="progress-wrap">
+            <div class="muted" id="progress-label">Progress: 0 / 5 blocks</div>
+            <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h2>Schedule (5:00 PM – 9:00 PM)</h2>
+          <div id="schedule"></div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h2>Notes for today</h2>
+          <textarea id="notes" class="note" placeholder="What did you revise? Key takeaways, formulas, vocab, mistakes to fix next time..."></textarea>
+        </div>
+      </div>
+
+      <!-- Right: Tips / Countdown -->
+      <div>
+        <div class="card">
+          <h2>Exam countdown</h2>
+          <div id="countdown-exam" class="clock" style="font-size:22px">Set your exam date</div>
+          <div class="controls" style="margin-top:8px">
+            <input id="exam-date" type="date" class="btn" style="padding:8px 10px; border-radius:10px;" />
+            <button class="btn btn-outline" id="save-date">Save</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h2>Tip of the day</h2>
+          <div class="tip" id="tip"></div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h2>Subject legend</h2>
+          <div class="tips">
+            <div class="tip"><div class="slot"><div class="chip maths"></div><strong>Maths</strong><span class="muted"> Mint</span></div></div>
+            <div class="tip"><div class="slot"><div class="chip physics"></div><strong>Physics</strong><span class="muted"> Lavender</span></div></div>
+            <div class="tip"><div class="slot"><div class="chip chemistry"></div><strong>Chemistry</strong><span class="muted"> Sky blue</span></div></div>
+            <div class="tip"><div class="slot"><div class="chip english"></div><strong>English</strong><span class="muted"> Blush pink</span></div></div>
+            <div class="tip"><div class="slot"><div class="chip geography"></div><strong>Geography</strong><span class="muted"> Soft teal</span></div></div>
+            <div class="tip"><div class="slot"><div class="chip break"></div><strong>Break</strong><span class="muted"> Lilac</span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Built for GCSE success • Focus, consistency, and smart practice.
+    </footer>
+  </div>
+
+  <script>
+    // Data: days and blocks (no History)
+    const DAYS = ["Monday","Tuesday","Thursday","Friday","Sunday"];
+    const SCHEDULE = {
+      "Monday": [
+        { time: "5:00 – 5:45", subject: "English Literature", color:"english", tag:"Essays + quotes" },
+        { time: "5:45 – 5:52", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "5:52 – 6:37", subject: "Physics", color:"physics", tag:"Forces & energy" },
+        { time: "6:37 – 6:42", subject: "Break", color:"break", tag:"5 mins" },
+        { time: "6:42 – 7:27", subject: "Chemistry", color:"chemistry", tag:"Atomic structure" },
+        { time: "7:27 – 7:34", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "7:34 – 8:19", subject: "Maths", color:"maths", tag:"Algebra practice" },
+        { time: "8:19 – 8:26", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "8:26 – 9:00", subject: "Geography", color:"geography", tag:"Case study recall" },
+      ],
+      "Tuesday": [
+        { time: "5:00 – 5:45", subject: "Physics", color:"physics", tag:"Electricity & waves" },
+        { time: "5:45 – 5:52", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "5:52 – 6:37", subject: "Chemistry", color:"chemistry", tag:"Organic chemistry" },
+        { time: "6:37 – 6:42", subject: "Break", color:"break", tag:"5 mins" },
+        { time: "6:42 – 7:27", subject: "Maths", color:"maths", tag:"Geometry & trig" },
+        { time: "7:27 – 7:34", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "7:34 – 8:19", subject: "English Language", color:"english", tag:"Timed writing" },
+        { time: "8:19 – 8:26", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "8:26 – 9:00", subject: "Geography", color:"geography", tag:"Physical landscapes" },
+      ],
+      "Thursday": [
+        { time: "5:00 – 5:45", subject: "Maths", color:"maths", tag:"Mixed exam Qs" },
+        { time: "5:45 – 5:52", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "5:52 – 6:37", subject: "Physics", color:"physics", tag:"Space & nuclear" },
+        { time: "6:37 – 6:42", subject: "Break", color:"break", tag:"5 mins" },
+        { time: "6:42 – 7:27", subject: "English Literature", color:"english", tag:"Poetry comparison" },
+        { time: "7:27 – 7:34", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "7:34 – 8:19", subject: "Chemistry", color:"chemistry", tag:"Rates of reaction" },
+        { time: "8:19 – 8:26", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "8:26 – 9:00", subject: "English Language", color:"english", tag:"Reading comp" },
+      ],
+      "Friday": [
+        { time: "5:00 – 5:45", subject: "English Language", color:"english", tag:"Analysis" },
+        { time: "5:45 – 5:52", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "5:52 – 6:37", subject: "Geography", color:"geography", tag:"Case study recall" },
+        { time: "6:37 – 6:42", subject: "Break", color:"break", tag:"5 mins" },
+        { time: "6:42 – 7:27", subject: "Maths", color:"maths", tag:"Statistics & probability" },
+        { time: "7:27 – 7:34", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "7:34 – 8:19", subject: "Chemistry", color:"chemistry", tag:"Practical skills" },
+        { time: "8:19 – 8:26", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "8:26 – 9:00", subject: "Physics", color:"physics", tag:"Waves recap" },
+      ],
+      "Sunday": [
+        { time: "5:00 – 5:45", subject: "Maths", color:"maths", tag:"Exam paper practice" },
+        { time: "5:45 – 5:52", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "5:52 – 6:37", subject: "English Literature", color:"english", tag:"Quotes drill" },
+        { time: "6:37 – 6:42", subject: "Break", color:"break", tag:"5 mins" },
+        { time: "6:42 – 7:27", subject: "Chemistry", color:"chemistry", tag:"Electrolysis & acids" },
+        { time: "7:27 – 7:34", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "7:34 – 8:19", subject: "Physics", color:"physics", tag:"Energy & forces" },
+        { time: "8:19 – 8:26", subject: "Break", color:"break", tag:"7 mins" },
+        { time: "8:26 – 9:00", subject: "English Language", color:"english", tag:"Timed writing" },
+      ],
+    };
+
+    // Tips
+    const TIPS = [
+      { t:"Active recall > passive reading", d:"Close the book and write from memory. Teach the topic out loud." },
+      { t:"Past papers weekly", d:"Mark against the mark scheme. Learn exact phrasing that earns points." },
+      { t:"Breaks boost focus", d:"5–7 minutes: water, stretch, short walk. No scrolling." },
+      { t:"Target weak topics", d:"Keep a list of pitfalls. Revisit until you can explain them simply." },
+      { t:"Layered notes", d:"One-page summary per topic with key formulas, definitions, and an example." },
+      { t:"English technique", d:"Plan fast, quote precisely, analyse clearly. Stop when the clock says." },
+      { t:"Maths mastery", d:"Show every step. Check units, sig figs, and common error traps." },
+      { t:"Science precision", d:"Memorise formulas + variables. Practicals: controls, errors, improvements." },
+    ];
+
+    // DOM
+    const tabs = document.getElementById('day-tabs');
+    const scheduleEl = document.getElementById('schedule');
+    const notesEl = document.getElementById('notes');
+    const currentBlockEl = document.getElementById('current-block');
+    const countdownEl = document.getElementById('countdown');
+    const phaseEl = document.getElementById('phase');
+    const progressFill = document.getElementById('progress-fill');
+    const progressLabel = document.getElementById('progress-label');
+    const tipEl = document.getElementById('tip');
+    const examDateInput = document.getElementById('exam-date');
+    const examCountdownEl = document.getElementById('countdown-exam');
+
+    // State
+    let day = autoSelectDay();
+    let selectedIndex = 0;     // Which study block index is current (skip breaks)
+    let phase = 'study';       // 'study' or 'break'
+    let timeLeft = 45 * 60;    // seconds
+    let timerId = null;
+
+    // Build tabs
+    DAYS.forEach(d => {
+      const b = document.createElement('button');
+      b.className = 'tab' + (d === day ? ' active' : '');
+      b.textContent = d;
+      b.onclick = () => { day = d; setActiveTab(d); renderSchedule(); loadNotes(); resetTimerToStudy(); updateProgress(); };
+      tabs.appendChild(b);
+    });
+
+    // Render schedule
+    function renderSchedule(){
+      scheduleEl.innerHTML = '';
+      const blocks = SCHEDULE[day];
+      blocks.forEach((b, i) => {
+        const row = document.createElement('div'); row.className = 'row';
+        const left = document.createElement('div'); left.className = 'time'; left.textContent = b.time;
+        const right = document.createElement('div'); right.className = 'slot';
+        const chip = document.createElement('div'); chip.className = 'chip ' + b.color;
+        const subj = document.createElement('div'); subj.className = 'subject'; subj.textContent = b.subject;
+        const tag = document.createElement('div'); tag.className = 'tag'; tag.textContent = b.tag;
+        right.append(chip, subj, tag);
+
+        // Click a study row to set current block
+        if (b.subject !== 'Break'){
+          row.style.cursor = 'pointer';
+          row.title = 'Click to make this the current block';
+          row.onclick = () => {
+            selectedIndex = i;
+            phase = 'study';
+            const mins = 45;
+            timeLeft = mins * 60;
+            updateTimerUI();
+            updateCurrentBlockLabel();
+          };
+        }
+        row.append(left, right);
+        scheduleEl.appendChild(row);
+      });
+      updateCurrentBlockLabel();
+    }
+
+    // Highlight tab
+    function setActiveTab(active){
+      Array.from(tabs.children).forEach(btn => {
+        btn.classList.toggle('active', btn.textContent === active);
+      });
+    }
+
+    // Select today (Mon/Tue/Thu/Fri/Sun only; others default to Monday)
+    function autoSelectDay(){
+      const map = {0:'Sunday',1:'Monday',2:'Tuesday',4:'Thursday',5:'Friday',6:'Sunday'};
+      const d = new Date().getDay(); // 0=Sun
+      return map[d] || 'Monday';
+    }
+
+    // Notes persistence
+    function loadNotes(){
+      const key = `notes-${day}`;
+      notesEl.value = localStorage.getItem(key) || '';
+    }
+    notesEl.addEventListener('input', () => {
+      localStorage.setItem(`notes-${day}`, notesEl.value);
+    });
+
+    // Progress persistence (checkbox-less but tracked per finished block)
+    function getProgress(){
+      const key = `progress-${day}`;
+      return JSON.parse(localStorage.getItem(key) || '[]'); // array of completed block indices (study blocks only)
+    }
+    function setProgress(arr){
+      localStorage.setItem(`progress-${day}`, JSON.stringify(arr));
+    }
+    function updateProgress(){
+      const completed = getProgress();
+      const totalStudyBlocks = SCHEDULE[day].filter(b => b.subject !== 'Break').length; // 5
+      const pct = (completed.length / totalStudyBlocks) * 100;
+      progressFill.style.width = `${pct}%`;
+      progressLabel.textContent = `Progress: ${completed.length} / ${totalStudyBlocks} blocks`;
+    }
+
+    // Mark current block as done
+    function completeCurrentBlock(){
+      const blocks = SCHEDULE[day];
+      const current = blocks[selectedIndex];
+      if (!current || current.subject === 'Break') return;
+      const done = getProgress();
+      if (!done.includes(selectedIndex)){
+        done.push(selectedIndex);
+        setProgress(done);
+        updateProgress();
+      }
+    }
+
+    // Timer controls
+    const startBtn = document.getElementById('start');
+    const pauseBtn = document.getElementById('pause');
+    const resetBtn = document.getElementById('reset');
+    const togglePhaseBtn = document.getElementById('toggle-phase');
+
+    startBtn.onclick = () => {
+      if (timerId) return;
+      timerId = setInterval(tick, 1000);
+    };
+    pauseBtn.onclick = () => {
+      clearInterval(timerId); timerId = null;
+    };
+    resetBtn.onclick = () => {
+      clearInterval(timerId); timerId = null;
+      if (phase === 'study') resetTimerToStudy(); else resetTimerToBreak();
+      updateTimerUI();
+    };
+    togglePhaseBtn.onclick = () => {
+      clearInterval(timerId); timerId = null;
+      if (phase === 'study'){ phase = 'break'; resetTimerToBreak(); }
+      else { phase = 'study'; resetTimerToStudy(); }
+      updateTimerUI();
+    };
+
+    function tick(){
+      timeLeft--;
+      updateTimerUI();
+      if (timeLeft <= 0){
+        clearInterval(timerId); timerId = null;
+        if (phase === 'study'){
+          completeCurrentBlock();
+          // Auto switch to break (alternate 7,5,7,7 by schedule row)
+          phase = 'break'; resetTimerToBreak(); updateTimerUI();
+        } else {
+          // Break finished -> move to next study block
+          const nextStudy = nextStudyIndex(selectedIndex);
+          if (nextStudy !== null){
+            selectedIndex = nextStudy;
+            phase = 'study'; resetTimerToStudy(); updateTimerUI();
+          } else {
+            phaseEl.textContent = 'Day complete. Nice work.';
+          }
+        }
+      }
+    }
+
+    function nextStudyIndex(i){
+      const blocks = SCHEDULE[day];
+      for (let k = i+1; k < blocks.length; k++){
+        if (blocks[k].subject !== 'Break') return k;
+      }
+      return null;
+    }
+
+    function resetTimerToStudy(){ timeLeft = 45 * 60; phase = 'study'; phaseEl.textContent = '45-minute focused study.'; }
+    function resetTimerToBreak(){
+      // Calculate break length based on schedule slot around current index
+      const b = SCHEDULE[day][selectedIndex];
+      // Default 7 mins if ambiguous; otherwise detect the immediate break slot after current study block
+      let breakMins = 7;
+      const blocks = SCHEDULE[day];
+      // Find the break following the current study block
+      for (let k = selectedIndex+1; k < blocks.length; k++){
+        if (blocks[k].subject === 'Break'){
+          breakMins = blocks[k].tag.includes('5') ? 5 : 7;
+          break;
+        }
+        if (blocks[k].subject !== 'Break') break; // next study block reached
+      }
+      timeLeft = breakMins * 60;
+      phaseEl.textContent = `${breakMins}-minute break. Hydrate, stretch, no scrolling.`;
+    }
+
+    function updateTimerUI(){
+      const m = Math.floor(timeLeft/60).toString().padStart(2,'0');
+      const s = Math.floor(timeLeft%60).toString().padStart(2,'0');
+      countdownEl.textContent = `${m}:${s}`;
+      updateCurrentBlockLabel();
+    }
+
+    function updateCurrentBlockLabel(){
+      const b = SCHEDULE[day][selectedIndex];
+      if (!b || b.subject === 'Break'){
+        // default to first study block of the day
+        selectedIndex = SCHEDULE[day].findIndex(x => x.subject !== 'Break');
+      }
+      const current = SCHEDULE[day][selectedIndex];
+      currentBlockEl.textContent = `Current block: ${current.subject} — ${current.tag} (${current.time})`;
+    }
+
+    // Tip of the day
+    function setTip(){
+      const idx = Math.floor(Math.random() * TIPS.length);
+      const t = TIPS[idx];
+      tipEl.innerHTML = `<h3>${t.t}</h3><p>${t.d}</p>`;
+    }
+
+    // Theme toggle
+    document.getElementById('toggle-theme').addEventListener('click', () => {
+      const isDark = document.documentElement.dataset.theme === 'dark';
+      document.documentElement.dataset.theme = isDark ? 'light' : 'dark';
+      document.body.style.background = isDark
+        ? 'radial-gradient(1100px 700px at 15% -10%, #fff 0%, var(--bg) 55%), var(--bg)'
+        : 'radial-gradient(1100px 700px at 15% -10%, #0a0d19 0%, var(--bg) 55%), var(--bg)';
+    });
+
+    // Exam countdown
+    function updateExamCountdown(){
+      const saved = localStorage.getItem('exam-date');
+      if (saved){
+        const target = new Date(saved);
+        const now = new Date();
+        const diff = target - now;
+        if (diff <= 0){
+          examCountdownEl.textContent = 'Exam day. You’ve got this.';
+          return;
+        }
+        const days = Math.floor(diff / (1000*60*60*24));
+        const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+        examCountdownEl.textContent = `${days} days ${hours} hours left`;
+        examDateInput.value = saved;
+      } else {
+        examCountdownEl.textContent = 'Set your exam date';
+      }
+    }
+    document.getElementById('save-date').addEventListener('click', () => {
+      const v = examDateInput.value;
+      if (v){ localStorage.setItem('exam-date', v); updateExamCountdown(); }
+    });
+
+    // Init
+    renderSchedule();
+    loadNotes();
+    resetTimerToStudy();
+    setTip();
+    updateExamCountdown();
+    updateProgress();
+  </script>
+</body>
+</html>
